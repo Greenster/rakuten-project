@@ -1,5 +1,5 @@
-#Java Automation Project
-##Base Point for Java Automation Projects
+#Rakuten Automation Project
+##Base Point for Rakuten Java Automation Projects
 
 *Project for creating automation tests using Selenium WebDriver and TestNG.*
 
