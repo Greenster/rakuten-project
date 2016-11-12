@@ -14,7 +14,10 @@ import java.util.concurrent.*;
 
 import org.apache.log4j.*;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.firefox.*;
+import org.openqa.selenium.ie.*;
+import org.openqa.selenium.opera.*;
 import org.testng.annotations.*;
 
 import com.sqa.lg.helpers.*;
@@ -69,16 +72,65 @@ public class BasicAutoTest {
 		return this.log;
 	}
 
-	@BeforeClass
-	public void setupTest() {
+	@BeforeClass(enabled = true, groups = { "chrome-setup" })
+	public void setupChrome() {
 		// Setup test
-		getLog().info("Setting up driver");
+		getLog().info("Setting Chrome driver system property");
+		System.setProperty("webdriver.chrome.driver", "drivers\\chromedriver.exe");
+		getLog().info("Setting up Chrome driver");
+		this.driver = new ChromeDriver();
+		getLog().trace("Setting implicit wait 30 secounds.");
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		getLog().trace("Setting window to fullscreen");
+		this.driver.manage().window().maximize();
+		getLog().info("Going to baseURL " + this.baseURL);
+		this.driver.get(this.baseURL);
+		getLog().debug("Clearing cookies.");
+		this.driver.manage().deleteAllCookies();
+	}
+
+	@BeforeClass(enabled = true, groups = { "firefox-setup" })
+	public void setupFirefox() {
+		// Setup test
+		getLog().info("Setting up Firefox driver");
 		this.driver = new FirefoxDriver();
 		getLog().trace("Setting implicit wait 30 secounds.");
 		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		getLog().trace("Setting window to fullscreen");
 		this.driver.manage().window().maximize();
-		getLog().info("Going to baseURL");
+		getLog().info("Going to baseURL " + this.baseURL);
+		this.driver.get(this.baseURL);
+		getLog().debug("Clearing cookies.");
+		this.driver.manage().deleteAllCookies();
+	}
+
+	@BeforeClass(enabled = true, groups = { "ie-setup" })
+	public void setupIExplorer() {
+		// Setup test
+		getLog().info("Setting up IExplorer driver system property");
+		System.setProperty("webdriver.ie.driver", "drivers/IEDriverServer.exe");
+		getLog().info("Setting up IExplorer driver");
+		this.driver = new InternetExplorerDriver();
+		getLog().trace("Setting implicit wait 30 secounds.");
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		getLog().trace("Setting window to fullscreen");
+		this.driver.manage().window().maximize();
+		getLog().info("Going to baseURL " + this.baseURL);
+		this.driver.get(this.baseURL);
+		getLog().debug("Clearing cookies.");
+		this.driver.manage().deleteAllCookies();
+	}
+
+	@BeforeClass(enabled = false, groups = { "opera-setup" })
+	public void setupOpera() {
+		// Setup test
+		getLog().info("Setting up Opera driver");
+		this.driver = new OperaDriver();
+		getLog().trace("Setting implicit wait 30 secounds.");
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		getLog().trace("Setting window to fullscreen");
+		this.driver.manage().window().maximize();
+		getLog().info("Going to baseURL " + this.baseURL);
 		this.driver.get(this.baseURL);
 		getLog().debug("Clearing cookies.");
 		this.driver.manage().deleteAllCookies();
