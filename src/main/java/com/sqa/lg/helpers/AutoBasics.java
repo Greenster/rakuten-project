@@ -33,6 +33,44 @@ public class AutoBasics {
 	public static final String DEFAULT_SCREENSHOT_FILENAME = "screenshots/";
 	public static final String DEFAULT_SCREENSHOT_SAVE_LOCATION = "screenshot/";
 	public static final String FILE_EXTENSION = ".jpg";
+	private static final String DEFAULT_CONFIG_PROPERTIES_LOCATION = "src/main/resources/config.properties";
+	private static final String DEFAULT_CONFIG_SAVE_LOCATION = "src/main/resources/saved.properties";
+
+	public static Properties evalProperties() throws IOException {
+		return evalProperties(DEFAULT_CONFIG_PROPERTIES_LOCATION);
+	}
+
+	public static Properties evalProperties(String fileLocation) throws IOException {
+		// Create properties
+		Properties props = new Properties();
+		// Create a File with passed fileLocation details
+		File file = new File("src/main/resources/config.properties");
+		// Create a FileInputStream based File object
+		FileInputStream fis = new FileInputStream(file);
+		// Load Properties based on FileInputStream
+		props.load(fis);
+		// Return loadedProperties object
+		return props;
+	}
+
+	public static String evalProperty(Properties props, String propKey) {
+		// Create a variable and set its value to the value of the propKey from
+		// Properties file
+		String value = props.getProperty(propKey);
+		// Return the stored String value
+		return value;
+	}
+
+	// Overload
+	public static String evalProperty(String propKey) throws IOException {
+		return evalProperty(DEFAULT_CONFIG_PROPERTIES_LOCATION, propKey);
+	}
+
+	public static String evalProperty(String fileLocation, String propKey) throws IOException {
+		Properties props = evalProperties(fileLocation);
+		String value = evalProperty(props, propKey);
+		return value;
+	}
 
 	public static List<WebElement> getByTagName(WebDriver driver, String tagName) {
 		List<WebElement> elements = driver.findElements(By.tagName(tagName));
@@ -97,4 +135,21 @@ public class AutoBasics {
 		return true;
 	}
 
+	public static boolean writeProperties(Properties props, String key, String value) {
+		return writeProperties(props, DEFAULT_CONFIG_SAVE_LOCATION, key, value);
+	}
+
+	public static boolean writeProperties(Properties props, String fileLocation, String key, String value) {
+		props.setProperty(key, value);
+		try {
+			File saveFile = new File(fileLocation);
+			FileOutputStream fileOutputStream = new FileOutputStream(saveFile);
+			props.store(fileOutputStream, "Saved Config Details");
+		} catch (FileNotFoundException e) {
+			return false;
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
 }

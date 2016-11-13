@@ -17,7 +17,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.firefox.*;
 import org.openqa.selenium.ie.*;
-import org.openqa.selenium.opera.*;
 import org.testng.annotations.*;
 
 import com.sqa.lg.helpers.*;
@@ -72,7 +71,7 @@ public class BasicAutoTest {
 		return this.log;
 	}
 
-	@BeforeClass(enabled = true, groups = { "chrome-setup" })
+	@BeforeClass(enabled = false, groups = { "chrome-setup" })
 	public void setupChrome() {
 		// Setup test
 		getLog().info("Setting Chrome driver system property");
@@ -104,7 +103,7 @@ public class BasicAutoTest {
 		this.driver.manage().deleteAllCookies();
 	}
 
-	@BeforeClass(enabled = true, groups = { "ie-setup" })
+	@BeforeClass(enabled = false, groups = { "ie-setup" })
 	public void setupIExplorer() {
 		// Setup test
 		getLog().info("Setting up IExplorer driver system property");
@@ -121,30 +120,28 @@ public class BasicAutoTest {
 		this.driver.manage().deleteAllCookies();
 	}
 
-	@BeforeClass(enabled = false, groups = { "opera-setup" })
-	public void setupOpera() {
-		// Setup test
-		getLog().info("Setting up Opera driver");
-		this.driver = new OperaDriver();
-		getLog().trace("Setting implicit wait 30 secounds.");
-		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		getLog().trace("Setting window to fullscreen");
-		this.driver.manage().window().maximize();
-		getLog().info("Going to baseURL " + this.baseURL);
-		this.driver.get(this.baseURL);
-		getLog().debug("Clearing cookies.");
-		this.driver.manage().deleteAllCookies();
-	}
-
 	public boolean takeScreenshot(String filename) {
 		return AutoBasics.takeScreenshot(getDriver(), "screenshots/", filename, getLog());
 	}
 
-	@AfterClass
-	public void tearDown() {
+	@AfterClass(enabled = false, groups = { "chrome-setup" })
+	public void tearDownBrowsersCH() {
 		// Close test
-		getLog().info("Closing all driver windows.");
-		this.driver.quit();
+		getLog().info("Closing all driver windows - CHROME.");
+		getDriver().quit();
 	}
 
+	@AfterClass(enabled = true, groups = { "firefox-setup" })
+	public void tearDownBrowsersFF() {
+		// Close test
+		getLog().info("Closing all driver windows - FIREFOX.");
+		getDriver().quit();
+	}
+
+	@AfterClass(enabled = false, groups = { "ie-setup" })
+	public void tearDownBrowsersIE() {
+		// Close test
+		getLog().info("Closing all driver windows - IE.");
+		getDriver().quit();
+	}
 }
